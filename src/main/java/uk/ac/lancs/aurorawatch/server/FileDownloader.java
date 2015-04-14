@@ -9,11 +9,20 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.annotation.PostConstruct;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 @Component
 public class FileDownloader {
@@ -30,7 +39,20 @@ public class FileDownloader {
     @Value("${file.download.userAgent}")
     private String userAgent;
 
-    public boolean downloadFile() {
+    private DocumentBuilder builder;
+    private Status status;
+
+    public FileDownloader() throws ParserConfigurationException {
+        builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        
+    }
+    
+    @PostConstruct
+    public void afterPropertiesSet() {
+        status = parseStatus();
+    }
+
+    private boolean downloadFile() {
         HttpURLConnection conn = null;
         InputStream in = null;
         OutputStream out = null;
@@ -86,5 +108,58 @@ public class FileDownloader {
             IOUtils.closeQuietly(in);
             IOUtils.closeQuietly(out);
         }
+    }
+
+    private Status parseStatus() {
+        LOG.debug("Parsing status file: " + path);
+        File file = new File(path);
+        if (!file.exists()) {
+            return null;
+        }
+
+        Document document;
+        try {
+            document = builder.parse(file);
+        } catch (IOException | SAXException e) {
+            LOG.warn("Could not parse " + file, e);
+            return null;
+        }
+
+        NodeList nodeList = document.getDocumentElement().getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+
+            Node node = nodeList.item(i);
+            if (node.getNodeName().equalsIgnoreCase("current")) {
+
+                NodeList childNodes = node.getChildNodes();
+                for (int j = 0; j < childNodes.getLength(); j++) {
+
+                    Node cNode = childNodes.item(j);
+                    if (cNode.getNodeName().equalsIgnoreCase("state")) {
+
+                        String name = cNode.getAttributes().getNamedItem("name").getNodeValue();
+                        return Status.fromString(name);
+                    }
+
+                }
+            }
+        }
+        return null;
+
+    }
+
+    public boolean statusChanged() {
+        Status prevStatus = status;
+        LOG.debug("previous status: " + prevStatus);
+        status = null;
+        if (downloadFile()) {
+            status = parseStatus();
+            LOG.info("current status: " + prevStatus);
+        }
+        return status != null && (prevStatus == null || prevStatus != status);
+    }
+    
+    public Status getStatus() {
+        return status;
     }
 }
