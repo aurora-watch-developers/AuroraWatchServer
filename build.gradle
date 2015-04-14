@@ -22,6 +22,7 @@ repositories {
 }
 
 dependencies {
+    compile("commons-io:commons-io:2.4")
     compile("org.springframework.boot:spring-boot-starter")
     testCompile("junit:junit")
 }
