@@ -9,7 +9,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import javax.annotation.PostConstruct;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,13 +17,11 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-@Component
 public class FileDownloader {
 
     private static final Logger LOG = LoggerFactory.getLogger(FileDownloader.class);
@@ -44,12 +41,8 @@ public class FileDownloader {
 
     public FileDownloader() throws ParserConfigurationException {
         builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        
-    }
-    
-    @PostConstruct
-    public void afterPropertiesSet() {
         status = parseStatus();
+        
     }
 
     private boolean downloadFile() {

@@ -4,17 +4,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
-public class ScheduledTasks {
+@Service
+public class ScheduledTasksService {
     
-    private static final Logger LOG = LoggerFactory.getLogger(ScheduledTasks.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ScheduledTasksService.class);
     
     @Autowired
     private FileDownloader downloader;
-    
-    @Autowired
+  
+    @Autowired  
     private GCMNotifier notifier;
     
     void checkStatus() {
@@ -28,7 +28,7 @@ public class ScheduledTasks {
         }
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate=60000)
     public void timedTask() {
         checkStatus();
     }

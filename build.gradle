@@ -3,18 +3,19 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.3.RELEASE")
+        classpath 'com.google.appengine:gradle-appengine-plugin:1.9.19'
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'spring-boot'
+apply plugin: 'appengine'
+apply plugin: 'war'
 
-jar {
+war {
     baseName = 'aurora-watch-server'
-    version = '0.1.0'
+    version = '0.2.0'
 }
 
 repositories {
@@ -22,11 +23,31 @@ repositories {
 }
 
 dependencies {
-    compile("commons-io:commons-io:2.4")
-    compile("org.springframework.boot:spring-boot-starter")
-    testCompile("junit:junit")
+    compile 'ch.qos.logback:logback-classic:1.1.3'
+    compile 'com.google.appengine:appengine-api-1.0-sdk:1.9.19'
+    compile 'commons-io:commons-io:2.4'
+    compile 'org.springframework:spring-web:3.2.13.RELEASE'
+    testCompile 'junit:junit:4.11'
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
+}
+
+appengine {
+    httpPort = 5000
+
+    appcfg {
+        email = 'heather.mccartney@gmail.com'
+        passIn = true
+
+        logs {
+            severity = 1
+            outputFile = file('/home/heather/log/aurora-watch-uk.txt')
+        }
+
+        app {
+            id = 'aurora-watch-uk'
+        }
+    }
 }

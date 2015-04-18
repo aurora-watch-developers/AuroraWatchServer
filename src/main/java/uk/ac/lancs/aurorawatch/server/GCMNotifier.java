@@ -19,6 +19,4 @@ public class GCMNotifier {
     public void notifyGCM() {
         LOG.debug("notifyGCM: start");
     }
-    
-    
 }
