@@ -3,9 +3,9 @@ package uk.ac.lancs.aurorawatch.server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class GCMNotifier {
 
     private static final Logger LOG = LoggerFactory.getLogger(GCMNotifier.class);

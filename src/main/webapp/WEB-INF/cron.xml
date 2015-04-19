@@ -3,6 +3,6 @@
   <cron>
     <url>/scheduledFileDownload</url>
     <description>Download a file every minute</description>
-    <schedule>every 1 minutes</schedule>
+    <schedule>every 3 minutes</schedule>
   </cron>
 </cronentries>
