@@ -1,8 +1,10 @@
-package uk.ac.lancs.aurorawatch.server;
+package uk.ac.lancs.aurorawatch.server.dao;
 
 import java.util.Date;
 
 import org.springframework.stereotype.Service;
+
+import uk.ac.lancs.aurorawatch.server.Status;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;

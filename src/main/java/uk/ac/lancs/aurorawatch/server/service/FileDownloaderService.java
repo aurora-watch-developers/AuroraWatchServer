@@ -1,4 +1,4 @@
-package uk.ac.lancs.aurorawatch.server;
+package uk.ac.lancs.aurorawatch.server.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -24,6 +24,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import uk.ac.lancs.aurorawatch.server.Status;
+
 import com.google.appengine.api.urlfetch.FetchOptions;
 import com.google.appengine.api.urlfetch.HTTPHeader;
 import com.google.appengine.api.urlfetch.HTTPMethod;
@@ -33,9 +35,9 @@ import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 
 @Service
-public class FileDownloader {
+public class FileDownloaderService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FileDownloader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FileDownloaderService.class);
     private static final String USER_AGENT = "User-Agent";
     private static final Pattern CHARSET_PATTERN = Pattern.compile("(?i)\\bcharset=\\s*\"?([^\\s;\"]*)");
     private static final long THROTTLE = 60 * 1000;
@@ -50,7 +52,7 @@ public class FileDownloader {
     private DocumentBuilder builder;
     private long lastRun = 0;
 
-    public FileDownloader() throws ParserConfigurationException {
+    public FileDownloaderService() throws ParserConfigurationException {
         builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
     }
 

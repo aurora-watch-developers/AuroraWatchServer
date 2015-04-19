@@ -1,4 +1,4 @@
-package uk.ac.lancs.aurorawatch.server;
+package uk.ac.lancs.aurorawatch.server.web;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -10,16 +10,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import uk.ac.lancs.aurorawatch.server.Status;
+import uk.ac.lancs.aurorawatch.server.dao.StatusDAO;
+import uk.ac.lancs.aurorawatch.server.service.FileDownloaderService;
+import uk.ac.lancs.aurorawatch.server.service.GCMNotifierService;
+
 @Controller
 public class FileDownloadController {
     
     private static final Logger LOG = LoggerFactory.getLogger(FileDownloadController.class);
     
     @Autowired
-    private FileDownloader downloader;
+    private FileDownloaderService downloader;
   
     @Autowired  
-    private GCMNotifier notifier;
+    private GCMNotifierService notifier;
     
     @Autowired
     private StatusDAO dao;
@@ -43,6 +48,7 @@ public class FileDownloadController {
 
     @RequestMapping(value="/scheduledFileDownload", method = RequestMethod.GET)
     public void scheduledFileDownload(Writer responseWriter) throws IOException {
+        LOG.debug("scheduledFileDownload: start");
         Status status = checkStatus();
         String statusString = status == null ? "unknown" : status.name();
         responseWriter.write(statusString);
