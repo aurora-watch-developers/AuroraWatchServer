@@ -17,6 +17,10 @@ public class StatusDAO {
     static final String STATUS = "status";
     
     public boolean save(Status status) {
+        if (status == null) {
+            return false;
+        }
+        
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         Date now = new Date();
         

@@ -32,11 +32,11 @@ public class FileDownloadController {
         }
         boolean changed = dao.save(status);
         if (changed) {
-            LOG.warn("Status changed: " + downloader.getStatus());
+            LOG.warn("Status changed: " + status);
             notifier.notifyGCM();
             
         } else {
-            LOG.debug("No status change: " + downloader.getStatus());
+            LOG.debug("No status change: " + status);
         }
         return status;
     }
