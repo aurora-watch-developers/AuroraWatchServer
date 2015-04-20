@@ -2,6 +2,8 @@ package uk.ac.lancs.aurorawatch.server.dao;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import uk.ac.lancs.aurorawatch.server.Status;
@@ -18,8 +20,11 @@ public class StatusDAO {
     static final String ENTITY_NAME = Status.class.getSimpleName();
     static final String STATUS = "status";
     
+    private static final Logger LOG = LoggerFactory.getLogger(StatusDAO.class);
+    
     public boolean save(Status status) {
         if (status == null) {
+            LOG.warn("Status is required");
             return false;
         }
         
