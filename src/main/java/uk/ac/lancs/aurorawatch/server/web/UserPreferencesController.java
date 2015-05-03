@@ -60,8 +60,14 @@ public class UserPreferencesController {
         Iterator<Entity> it = alertLevels.iterator();
         while (it.hasNext()) {
             Entity entity = it.next();
-            responseWriter.write(entity.toString());
-            responseWriter.write('\n');
+            responseWriter.write("<p>");
+            responseWriter.write(entity.getProperty("created").toString());
+            responseWriter.write(" ");
+            responseWriter.write(entity.getProperty("status").toString());
+            responseWriter.write(" ");
+            responseWriter.write(entity.getProperty("token").toString());
+            responseWriter.write(" ");
+            responseWriter.write("</p>");
         }
     }
 }
