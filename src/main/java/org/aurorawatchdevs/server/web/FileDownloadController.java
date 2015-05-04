@@ -1,19 +1,18 @@
-package uk.ac.lancs.aurorawatch.server.web;
+package org.aurorawatchdevs.server.web;
 
 import java.io.IOException;
 import java.io.Writer;
 
+import org.aurorawatchdevs.server.Status;
+import org.aurorawatchdevs.server.dao.StatusDAO;
+import org.aurorawatchdevs.server.service.FileDownloaderService;
+import org.aurorawatchdevs.server.service.GCMNotifierService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import uk.ac.lancs.aurorawatch.server.Status;
-import uk.ac.lancs.aurorawatch.server.dao.StatusDAO;
-import uk.ac.lancs.aurorawatch.server.service.FileDownloaderService;
-import uk.ac.lancs.aurorawatch.server.service.GCMNotifierService;
 
 @Controller
 public class FileDownloadController {

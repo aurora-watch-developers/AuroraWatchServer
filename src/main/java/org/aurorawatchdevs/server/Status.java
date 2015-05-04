@@ -1,4 +1,4 @@
-package uk.ac.lancs.aurorawatch.server;
+package org.aurorawatchdevs.server;
 
 public enum Status {
     GREEN, YELLOW, RED;

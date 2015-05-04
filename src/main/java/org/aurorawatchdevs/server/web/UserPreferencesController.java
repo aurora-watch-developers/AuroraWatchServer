@@ -1,9 +1,11 @@
-package uk.ac.lancs.aurorawatch.server.web;
+package org.aurorawatchdevs.server.web;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 
+import org.aurorawatchdevs.server.Status;
+import org.aurorawatchdevs.server.dao.AlertLevelDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +14,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import uk.ac.lancs.aurorawatch.server.Status;
-import uk.ac.lancs.aurorawatch.server.dao.AlertLevelDAO;
 
 import com.google.appengine.api.datastore.Entity;
 
@@ -32,7 +31,7 @@ public class UserPreferencesController {
         return;
     }
 
-    @RequestMapping(value="/saveAlertLevel", method = RequestMethod.POST)
+    @RequestMapping(value="/saveAlertLevel", method = RequestMethod.GET)
     public void setAlertLevel(@RequestParam String token, @RequestParam String level, Writer responseWriter) 
             throws IOException {
         
