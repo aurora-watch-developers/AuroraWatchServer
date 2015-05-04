@@ -1,7 +1,7 @@
 package org.aurorawatchdevs.server;
 
 public enum Status {
-    GREEN, YELLOW, RED;
+    GREEN, YELLOW, AMBER, RED;
     
     public static Status fromString(String str) {
         if (str == null) {
