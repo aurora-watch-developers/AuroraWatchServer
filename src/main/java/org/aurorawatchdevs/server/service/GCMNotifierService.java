@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.google.appengine.api.datastore.Entity;
+
 @Service
 public class GCMNotifierService {
 
@@ -16,7 +18,10 @@ public class GCMNotifierService {
     @Value("${gcm.projectNumber}")
     private String projectNumber;
     
-    public void notifyGCM() {
+    public void notifyGCM(Iterable<Entity> clients) {
         LOG.debug("notifyGCM: start");
+        for (Entity entity : clients) {
+            LOG.info("notifying " + entity.getProperty("email"));
+        }
     }
 }

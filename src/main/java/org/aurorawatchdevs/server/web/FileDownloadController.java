@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.aurorawatchdevs.server.Status;
+import org.aurorawatchdevs.server.dao.AlertLevelDAO;
 import org.aurorawatchdevs.server.dao.StatusDAO;
 import org.aurorawatchdevs.server.service.FileDownloaderService;
 import org.aurorawatchdevs.server.service.GCMNotifierService;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.google.appengine.api.datastore.Entity;
 
 @Controller
 public class FileDownloadController {
@@ -26,7 +29,10 @@ public class FileDownloadController {
     private GCMNotifierService notifier;
     
     @Autowired
-    private StatusDAO dao;
+    private StatusDAO statusDAO;
+    
+    @Autowired
+    private AlertLevelDAO alertDAO;
     
     Status checkStatus() {
         Status status = downloader.getStatus();
@@ -34,10 +40,11 @@ public class FileDownloadController {
             LOG.warn("Status could not be retrieved");
             return null;
         }
-        boolean changed = dao.save(status);
+        boolean changed = statusDAO.save(status);
         if (changed) {
             LOG.warn("Status changed: " + status);
-            notifier.notifyGCM();
+            Iterable<Entity> clients = alertDAO.getWithStatusGreaterThanOrEqualTo(status);
+            notifier.notifyGCM(clients);
             
         } else {
             LOG.debug("No status change: " + status);

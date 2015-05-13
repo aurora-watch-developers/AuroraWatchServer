@@ -22,46 +22,54 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 @Service
 public class AlertLevelDAO {
     
-    static final String ENTITY_NAME = "AlertLevel";
+    static final String ENTITY_NAME = "AlertClient";
     static final String STATUS = "status";
-    static final String TOKEN = "token";
+    static final String REGISTRATION_ID = "registration_id";
+    static final String EMAIL = "email";
     
     private static final Logger LOG = LoggerFactory.getLogger(AlertLevelDAO.class);
     
-    public boolean save(String token, Status status) {
-        if (StringUtils.isEmpty(token) || status == null) {
-            LOG.warn("Token \"" + token + "\" and level \"" + "\" are both required");
+    public boolean save(String registrationId, String email, Status status) {
+        if (StringUtils.isEmpty(registrationId) || StringUtils.isEmpty(email) || status == null) {
+            LOG.warn("Registration ID \"" + registrationId + "\", email \"" + email + "\" and status \"" + status + "\" are all required");
             return false;
         }
         
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         Date now = new Date();
         
-        Filter filter = new FilterPredicate(TOKEN, FilterOperator.EQUAL, token);
+        Filter filter = new FilterPredicate(REGISTRATION_ID, FilterOperator.EQUAL, registrationId);
         Query query = new Query(ENTITY_NAME).setFilter(filter);
         PreparedQuery pq = datastore.prepare(query);
         Entity alertLevelEntity = pq.asSingleEntity();
         
         boolean create = false;
         if (alertLevelEntity == null) {
-            Key alertLevelKey = KeyFactory.createKey(ENTITY_NAME, token);
+            Key alertLevelKey = KeyFactory.createKey(ENTITY_NAME, REGISTRATION_ID);
             alertLevelEntity = new Entity(ENTITY_NAME, alertLevelKey);
             alertLevelEntity.setProperty("created", now);
             create = true;
         }
         
-        alertLevelEntity.setProperty(STATUS, status.name());
-        alertLevelEntity.setProperty(TOKEN, token);
+        alertLevelEntity.setProperty(STATUS, status.id());
+        alertLevelEntity.setProperty(EMAIL, email);
         alertLevelEntity.setProperty("updated", now);
         datastore.put(alertLevelEntity);
         return create;
     }
     
-    public Iterable<Entity> getAll() {
+    public Iterable<Entity> getWithStatusGreaterThanOrEqualTo(Status status) {
+        if (status == null) {
+            throw new IllegalArgumentException("status must be provided");
+        }
+        
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         
-        Query query = new Query(ENTITY_NAME);
+        Filter statusFilter = new FilterPredicate("status",
+                FilterOperator.GREATER_THAN_OR_EQUAL, status.id());
+        Query query = new Query(ENTITY_NAME).setFilter(statusFilter);
         PreparedQuery pq = datastore.prepare(query);
+        
         Iterable<Entity> results = pq.asIterable();
         return results;
     }
