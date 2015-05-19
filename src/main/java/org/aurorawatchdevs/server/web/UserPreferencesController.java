@@ -34,21 +34,14 @@ public class UserPreferencesController {
         writer.write(msg);
         return;
     }
-    
-    @RequestMapping(value="/saveAlertLevel", method = RequestMethod.GET)
-    public void setAlertLevelDebug(@RequestParam String token, @RequestParam String registrationId, @RequestParam String level, Writer responseWriter) 
-            throws IOException {
-        
-        setAlertLevel(token, registrationId, level, responseWriter);
-    }
 
     @RequestMapping(value="/saveAlertLevel", method = RequestMethod.POST)
     public void setAlertLevel(@RequestParam String token, @RequestParam String registrationId, @RequestParam String level, Writer responseWriter) 
             throws IOException {
         
-        LOG.debug("setAlertLevel: token " + token + ", level " + level);
-        if (StringUtils.isEmpty(token) || StringUtils.isEmpty(level)) {
-            logAndWrite(responseWriter, "Token \"" + token + "\" and level \"" + level + "\" are both required");
+        LOG.debug("setAlertLevel: token " + token + ", registrationId " + registrationId + ", level " + level);
+        if (StringUtils.isEmpty(token) || StringUtils.isEmpty(registrationId) || StringUtils.isEmpty(level)) {
+            logAndWrite(responseWriter, "Token \"" + token + "\", registrationId \"" + registrationId + "\" and level \"" + level + "\" are all required");
             return;
         }
         
@@ -67,5 +60,6 @@ public class UserPreferencesController {
         }
         
         dao.save(registrationId, payload.getEmail(), status);
+        responseWriter.write("success");
     }
 }
