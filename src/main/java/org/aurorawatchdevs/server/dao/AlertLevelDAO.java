@@ -50,9 +50,9 @@ public class AlertLevelDAO {
             alertLevelEntity.setProperty("created", now);
             create = true;
         }
-        
-        alertLevelEntity.setProperty(STATUS, status.id());
+        alertLevelEntity.setProperty(REGISTRATION_ID, registrationId);
         alertLevelEntity.setProperty(EMAIL, email);
+        alertLevelEntity.setProperty(STATUS, status.id());
         alertLevelEntity.setProperty("updated", now);
         datastore.put(alertLevelEntity);
         return create;
