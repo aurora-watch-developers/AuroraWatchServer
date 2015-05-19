@@ -19,9 +19,6 @@ public class TokenCheckerService {
 
     private static final Logger LOG = LoggerFactory.getLogger(TokenCheckerService.class);
 
-    @Value("${tokenChecker.scope}")
-    private String scope;
-    
     @Value("${tokenChecker.aud}")
     private String aud;
 
@@ -42,10 +39,10 @@ public class TokenCheckerService {
                 
             GoogleIdToken.Payload payload = token.getPayload();
             if (!payload.getAudience().equals(aud)) {
-                throw new TokenValidationException("Payload authorized party " + payload.getAuthorizedParty() + " doesn't match configured value " + azp);
+                throw new TokenValidationException("Payload audience " + payload.getAudience() + " doesn't match configured value aud");
             }
             if (!payload.getAuthorizedParty().equals(azp)) {
-                throw new TokenValidationException("Payload authorized party " + payload.getAuthorizedParty() + " doesn't match configured value " + azp);
+                throw new TokenValidationException("Payload authorized party " + payload.getAuthorizedParty() + " doesn't match configured value azp");
             }
             return payload;
             
