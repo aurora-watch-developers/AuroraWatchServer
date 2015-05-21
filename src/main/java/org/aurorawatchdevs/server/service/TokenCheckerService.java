@@ -23,7 +23,7 @@ public class TokenCheckerService {
     private String aud;
 
     @Value("${tokenChecker.azp}")
-    private String azp;
+    private String[] azp;
     
     private JsonFactory jsonFactory = new GsonFactory();
     private GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier(new NetHttpTransport(), jsonFactory);
@@ -41,7 +41,13 @@ public class TokenCheckerService {
             if (!payload.getAudience().equals(aud)) {
                 throw new TokenValidationException("Payload audience " + payload.getAudience() + " doesn't match configured value aud");
             }
-            if (!payload.getAuthorizedParty().equals(azp)) {
+            boolean match = false;
+            for (int i = 0; !match && i < azp.length; i++) {
+                if(payload.getAuthorizedParty().equals(azp[i])) {
+                    match = true;
+                }
+            }
+            if (!match) {
                 throw new TokenValidationException("Payload authorized party " + payload.getAuthorizedParty() + " doesn't match configured value azp");
             }
             return payload;
