@@ -22,7 +22,7 @@ public class GCMNotifierService {
         LOG.debug("notifyGCM: start");
 
         StringBuilder registrationIds = new StringBuilder();
-        registrationIds.append("\"regstration_ids\": [");
+        registrationIds.append("{ \"regstration_ids\": [");
 
         String splitter = "";
         for (Entity entity : clients) {
@@ -32,6 +32,6 @@ public class GCMNotifierService {
             registrationIds.append("\"" + entity.getProperty("registrationId") + "\"");
         }
 
-        registrationIds.append("]");
+        registrationIds.append("] }");
     }
 }
