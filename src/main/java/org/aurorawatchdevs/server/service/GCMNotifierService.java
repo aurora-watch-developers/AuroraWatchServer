@@ -20,8 +20,18 @@ public class GCMNotifierService {
     
     public void notifyGCM(Iterable<Entity> clients) {
         LOG.debug("notifyGCM: start");
+
+        StringBuilder registrationIds = new StringBuilder();
+        registrationIds.append("\"regstration_ids\": [");
+
+        String splitter = "";
         for (Entity entity : clients) {
             LOG.info("notifying " + entity.getProperty("email"));
+            registrationIds.append(splitter);
+            splitter = ", ";
+            registrationIds.append("\"" + entity.getProperty("registrationId") + "\"");
         }
+
+        registrationIds.append("]");
     }
 }
