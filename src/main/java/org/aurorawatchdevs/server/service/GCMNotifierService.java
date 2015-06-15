@@ -30,7 +30,7 @@ public class GCMNotifierService {
         LOG.debug("notifyGCM: start");
 
         StringBuilder registrationIds = new StringBuilder();
-        registrationIds.append("{ \"regstration_ids\": [");
+        registrationIds.append("{ \"registration_ids\": [");
         String splitter = "";
         for (Entity entity : clients) {
             LOG.info("notifying " + entity.getProperty("email"));
