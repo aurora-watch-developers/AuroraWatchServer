@@ -51,12 +51,14 @@ public class GCMNotifierService {
 
             conn.setRequestMethod("POST");
 
+            apiKey = "AIzaSyCrNYbWH_gNHMN6z2giB4Oe_dUgnTn94d8"; //Probably need to store this somewhere better!
+
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("Authorization", "key=" + apiKey);
 
             LOG.debug("notifyGCM: apiKey= " + apiKey);
             LOG.debug("notifyGCM: message= " + message);
-            
+
             conn.setDoOutput(true);
 
             OutputStreamWriter streamWriter = new OutputStreamWriter(conn.getOutputStream());
