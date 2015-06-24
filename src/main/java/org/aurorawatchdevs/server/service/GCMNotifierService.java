@@ -78,6 +78,9 @@ public class GCMNotifierService {
                 response.append(inputLine);
             }
             in.close();
+
+            System.out.println("Response : " + response);
+            
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
