@@ -34,9 +34,10 @@ public class GCMNotifierService {
         String splitter = "";
         for (Entity entity : clients) {
             LOG.info("notifying " + entity.getProperty("email"));
+            LOG.info("registrationId " + entity.getProperty("registration_id"));
             registrationIds.append(splitter);
             splitter = ", ";
-            registrationIds.append("\"" + entity.getProperty("registrationId") + "\"");
+            registrationIds.append("\"" + entity.getProperty("registration_id") + "\"");
         }
         registrationIds.append("] }");
 
