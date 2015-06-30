@@ -34,9 +34,10 @@ public class GCMNotifierService {
         String splitter = "";
         for (Entity entity : clients) {
             LOG.info("notifying " + entity.getProperty("email"));
+            LOG.info("registrationId " + entity.getProperty("registration_id"));
             registrationIds.append(splitter);
             splitter = ", ";
-            registrationIds.append("\"" + entity.getProperty("registrationId") + "\"");
+            registrationIds.append("\"" + entity.getProperty("registration_id") + "\"");
         }
         registrationIds.append("] }");
 
@@ -56,7 +57,7 @@ public class GCMNotifierService {
 
             LOG.debug("notifyGCM: apiKey= " + apiKey);
             LOG.debug("notifyGCM: message= " + message);
-            
+
             conn.setDoOutput(true);
 
             OutputStreamWriter streamWriter = new OutputStreamWriter(conn.getOutputStream());
@@ -77,6 +78,9 @@ public class GCMNotifierService {
                 response.append(inputLine);
             }
             in.close();
+
+            System.out.println("Response : " + response);
+            
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {

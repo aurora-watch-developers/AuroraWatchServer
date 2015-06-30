@@ -87,6 +87,9 @@ public class AlertLevelDAO {
         PreparedQuery pq = datastore.prepare(query);
         
         Iterator<Entity> results = pq.asIterator();
+
+        LOG.info("getWithEmail found result? " + results.hasNext());
+
         return results.hasNext() ? results.next() : null;
     }
 
