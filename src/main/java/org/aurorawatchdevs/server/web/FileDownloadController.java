@@ -53,7 +53,7 @@ public class FileDownloadController {
         if (changed) {
             LOG.warn("Status changed: " + status);
             Iterable<Entity> clients = alertDAO.getWithStatusGreaterThanOrEqualTo(status);
-            notifier.notifyGCM(clients);
+            notifier.notifyGCM(clients, status.name());
             
         } else {
             LOG.debug("No status change: " + status);
@@ -78,7 +78,7 @@ public class FileDownloadController {
             return;
         }
         
-        notifier.notifyGCM(Arrays.asList(entity));
+        notifier.notifyGCM(Arrays.asList(entity), "TEST");
         responseWriter.write("OK");
     }
 }

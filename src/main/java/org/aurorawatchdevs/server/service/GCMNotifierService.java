@@ -26,7 +26,7 @@ public class GCMNotifierService {
     @Value("${gcm.projectNumber}")
     private String projectNumber;
 
-    public void notifyGCM(Iterable<Entity> clients) {
+    public void notifyGCM(Iterable<Entity> clients, String status) {
         LOG.debug("notifyGCM: start");
 
         StringBuilder registrationIds = new StringBuilder();
@@ -39,10 +39,12 @@ public class GCMNotifierService {
             splitter = ", ";
             registrationIds.append("\"" + entity.getProperty("registration_id") + "\"");
         }
-        registrationIds.append("] }");
+        registrationIds.append("]");
+
+        LOG.info("appending status " + status + " to message");
+        registrationIds.append(", \"data\" : {\"alertlevel\":\"" + status + "\"} }");
 
         postNotifications(registrationIds.toString());
-
     }
 
     private void postNotifications(String message) {
@@ -55,7 +57,7 @@ public class GCMNotifierService {
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("Authorization", "key=" + apiKey);
 
-            LOG.debug("notifyGCM: apiKey= " + apiKey);
+            //LOG.debug("notifyGCM: apiKey= " + apiKey);
             LOG.debug("notifyGCM: message= " + message);
 
             conn.setDoOutput(true);
@@ -80,7 +82,7 @@ public class GCMNotifierService {
             in.close();
 
             System.out.println("Response : " + response);
-            
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
