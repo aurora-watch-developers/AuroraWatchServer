@@ -40,6 +40,7 @@ public class StatusDAO {
         
         // Has the status changed?
         boolean changed = statusEntity.getProperty(STATUS) == null || !statusEntity.getProperty(STATUS).equals(status.name());
+        boolean increased = statusEntity.getProperty(STATUS) == null || statusIncreased(statusEntity.getProperty(STATUS).toString(), status.name());
 
         if (changed) {
             statusEntity.setProperty("since", now);
@@ -47,7 +48,21 @@ public class StatusDAO {
         }
         statusEntity.setProperty("updated", now);
         datastore.put(statusEntity);
-        return changed;
+        return increased;
+    }
+
+    private boolean statusIncreased(String oldStatus, String newStatus)
+    {
+        if (oldStatus == "")
+            return true;
+
+        Status old = Status.fromString(oldStatus);
+        Status current = Status.fromString(newStatus);
+
+        if (old.ordinal() < current.ordinal())
+            return true;
+        else
+            return false;
     }
 
 }

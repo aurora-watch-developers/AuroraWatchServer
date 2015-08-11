@@ -1,6 +1,7 @@
 package org.aurorawatchdevs.server.dao;
 
 import java.util.Date;
+import java.util.Iterator;
 
 import org.aurorawatchdevs.server.Status;
 import org.slf4j.Logger;
@@ -72,6 +73,24 @@ public class AlertLevelDAO {
         
         Iterable<Entity> results = pq.asIterable();
         return results;
+    }
+    
+    public Entity getWithEmail(String email) {
+        if (email == null) {
+            throw new IllegalArgumentException("email must be provided");
+        }
+        
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        Filter emailFilter = new FilterPredicate("email",
+                FilterOperator.EQUAL, email);
+        Query query = new Query(ENTITY_NAME).setFilter(emailFilter);
+        PreparedQuery pq = datastore.prepare(query);
+        
+        Iterator<Entity> results = pq.asIterator();
+
+        LOG.info("getWithEmail found result? " + results.hasNext());
+
+        return results.hasNext() ? results.next() : null;
     }
 
 }

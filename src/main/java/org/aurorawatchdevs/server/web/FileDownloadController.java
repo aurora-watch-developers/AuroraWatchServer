@@ -2,6 +2,7 @@ package org.aurorawatchdevs.server.web;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Arrays;
 
 import org.aurorawatchdevs.server.Status;
 import org.aurorawatchdevs.server.dao.AlertLevelDAO;
@@ -14,8 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 @Controller
 public class FileDownloadController {
@@ -44,7 +53,7 @@ public class FileDownloadController {
         if (changed) {
             LOG.warn("Status changed: " + status);
             Iterable<Entity> clients = alertDAO.getWithStatusGreaterThanOrEqualTo(status);
-            notifier.notifyGCM(clients);
+            notifier.notifyGCM(clients, status.name());
             
         } else {
             LOG.debug("No status change: " + status);
@@ -58,5 +67,18 @@ public class FileDownloadController {
         Status status = checkStatus();
         String statusString = status == null ? "unknown" : status.name();
         responseWriter.write(statusString);
+    }
+    
+    @RequestMapping(value="/testGCM", method = RequestMethod.GET) 
+    public void testGCM(@RequestParam String email, Writer responseWriter) throws IOException {
+        
+        Entity entity = alertDAO.getWithEmail(email);
+        if (entity == null) {
+            responseWriter.write("User not found with email " + email);
+            return;
+        }
+        
+        notifier.notifyGCM(Arrays.asList(entity), "TEST");
+        responseWriter.write("OK");
     }
 }
